@@ -107,11 +107,11 @@ func storeFromLocation(location string, cmdOpt cmdStoreOptions) (desync.Store, e
 		if err != nil {
 			return nil, err
 		}
-	case "sftp":
-		s, err = desync.NewSFTPStore(loc, opt)
-		if err != nil {
-			return nil, err
-		}
+	// case "sftp":
+	// 	s, err = desync.NewSFTPStore(loc, opt)
+	// 	if err != nil {
+	// 		return nil, err
+	// 	}
 	case "http", "https":
 		// This is for backwards compatibility only, to support http-timeout and
 		// http-error-retry in the config file for a bit longer. If those are
@@ -217,11 +217,11 @@ func indexStoreFromLocation(location string, cmdOpt cmdStoreOptions) (desync.Ind
 	switch loc.Scheme {
 	case "ssh":
 		return nil, "", errors.New("Index storage is not supported by ssh remote stores")
-	case "sftp":
-		s, err = desync.NewSFTPIndexStore(&p, opt)
-		if err != nil {
-			return nil, "", err
-		}
+	// case "sftp":
+	// 	s, err = desync.NewSFTPIndexStore(&p, opt)
+	// 	if err != nil {
+	// 		return nil, "", err
+	// 	}
 	case "http", "https":
 		// This is for backwards compatibility only, to support http-timeout and
 		// http-error-retry in the config file for a bit longer. If those are

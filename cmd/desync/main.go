@@ -46,7 +46,7 @@ func main() {
 		newChunkCommand(ctx),
 		newInfoCommand(ctx),
 		newListCommand(ctx),
-		newMountIndexCommand(ctx),
+		//newMountIndexCommand(ctx),
 		newPruneCommand(ctx),
 		newPullCommand(ctx),
 		newIndexServerCommand(ctx),

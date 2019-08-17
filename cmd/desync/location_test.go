@@ -1,7 +1,6 @@
 package main
 
 import (
-	"runtime"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -27,16 +26,9 @@ func TestLocationEquality(t *testing.T) {
 	require.True(t, locationMatch("./path", "./path"))
 	require.True(t, locationMatch("path", "path/"))
 	require.True(t, locationMatch("path/..", "."))
-	if runtime.GOOS == "windows" {
-		require.True(t, locationMatch("c:\\path\\to\\somewhere", "c:\\path\\to\\somewhere\\"))
-		require.True(t, locationMatch("/path/to/somewhere", "\\path\\to\\somewhere\\"))
-	}
 
 	// Not equal paths
 	require.False(t, locationMatch("/path", "path"))
 	require.False(t, locationMatch("/path/to", "path/to"))
 	require.False(t, locationMatch("/path/to", "/path/to/.."))
-	if runtime.GOOS == "windows" {
-		require.False(t, locationMatch("c:\\path1", "c:\\path2"))
-	}
 }

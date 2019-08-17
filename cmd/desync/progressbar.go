@@ -4,14 +4,14 @@ import (
 	"os"
 
 	"github.com/folbricht/desync"
-	"golang.org/x/crypto/ssh/terminal"
+	_ "golang.org/x/crypto/ssh/terminal"
 	pb "gopkg.in/cheggaaa/pb.v1"
 )
 
 // NewProgressBar initializes a wrapper for a https://github.com/cheggaaa/pb
 // progressbar that implements desync.ProgressBar
 func NewProgressBar(prefix string) desync.ProgressBar {
-	if !terminal.IsTerminal(int(os.Stderr.Fd())) && os.Getenv("DESYNC_PROGRESSBAR_ENABLED") == "" {
+	if os.Getenv("DESYNC_PROGRESSBAR_ENABLED") == "" {
 		return nil
 	}
 	bar := pb.New(0).Prefix(prefix)

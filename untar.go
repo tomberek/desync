@@ -14,7 +14,7 @@ import (
 
 	"golang.org/x/sync/errgroup"
 
-	"github.com/pkg/errors"
+	_ "github.com/pkg/errors"
 	"github.com/pkg/xattr"
 )
 
@@ -45,8 +45,8 @@ loop:
 			err = makeDir(dst, n, opts)
 		case NodeFile:
 			err = makeFile(dst, n, opts)
-		case NodeDevice:
-			err = makeDevice(dst, n, opts)
+		// case NodeDevice:
+		// 	err = makeDevice(dst, n, opts)
 		case NodeSymlink:
 			err = makeSymlink(dst, n, opts)
 		case nil:
@@ -158,35 +158,35 @@ func makeSymlink(base string, n NodeSymlink, opts UntarOptions) error {
 	return nil
 }
 
-func makeDevice(base string, n NodeDevice, opts UntarOptions) error {
-	dst := filepath.Join(base, n.Name)
+// func makeDevice(base string, n NodeDevice, opts UntarOptions) error {
+// 	dst := filepath.Join(base, n.Name)
 
-	if err := syscall.Unlink(dst); err != nil && !os.IsNotExist(err) {
-		return err
-	}
-	if err := syscall.Mknod(dst, uint32(n.Mode)|0666, int(mkdev(n.Major, n.Minor))); err != nil {
-		return errors.Wrapf(err, "mknod %s", dst)
-	}
-	if !opts.NoSameOwner {
-		if err := os.Chown(dst, n.UID, n.GID); err != nil {
-			return err
-		}
+// 	if err := syscall.Unlink(dst); err != nil && !os.IsNotExist(err) {
+// 		return err
+// 	}
+// 	if err := syscall.Mknod(dst, uint32(n.Mode)|0666, int(mkdev(n.Major, n.Minor))); err != nil {
+// 		return errors.Wrapf(err, "mknod %s", dst)
+// 	}
+// 	if !opts.NoSameOwner {
+// 		if err := os.Chown(dst, n.UID, n.GID); err != nil {
+// 			return err
+// 		}
 
-		if n.Xattrs != nil {
-			for key, value := range n.Xattrs {
-				if err := xattr.LSet(dst, key, []byte(value)); err != nil {
-					return err
-				}
-			}
-		}
-	}
-	if !opts.NoSamePermissions {
-		if err := syscall.Chmod(dst, uint32(n.Mode)); err != nil {
-			return errors.Wrapf(err, "chmod %s", dst)
-		}
-	}
-	return os.Chtimes(dst, n.MTime, n.MTime)
-}
+// 		if n.Xattrs != nil {
+// 			for key, value := range n.Xattrs {
+// 				if err := xattr.LSet(dst, key, []byte(value)); err != nil {
+// 					return err
+// 				}
+// 			}
+// 		}
+// 	}
+// 	if !opts.NoSamePermissions {
+// 		if err := syscall.Chmod(dst, uint32(n.Mode)); err != nil {
+// 			return errors.Wrapf(err, "chmod %s", dst)
+// 		}
+// 	}
+// 	return os.Chtimes(dst, n.MTime, n.MTime)
+// }
 
 func mkdev(major, minor uint64) uint64 {
 	dev := (major & 0x00000fff) << 8
